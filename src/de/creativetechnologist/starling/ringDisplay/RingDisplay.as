@@ -1,7 +1,7 @@
 /**
  * Created by mak on 10.09.14.
  */
-package de.creativetechnolgist.starling.ringDisplay {
+package de.creativetechnologist.starling.ringDisplay {
 import starling.display.DisplayObject;
 import starling.display.DisplayObjectContainer;
 import starling.display.Quad;

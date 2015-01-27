@@ -1,7 +1,7 @@
 /**
  * Created by mak on 26.01.15.
  */
-package de.creativetechnolgist.starling.ringDisplay {
+package de.creativetechnologist.starling.ringDisplay {
 import starling.display.DisplayObject;
 import starling.display.Sprite3D;
 

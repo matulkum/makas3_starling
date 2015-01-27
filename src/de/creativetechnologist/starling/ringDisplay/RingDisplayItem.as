@@ -1,9 +1,8 @@
 /**
  * Created by mak on 10.09.14.
  */
-package de.creativetechnolgist.starling.ringDisplay {
+package de.creativetechnologist.starling.ringDisplay {
 import starling.display.DisplayObject;
-import starling.display.Sprite3D;
 
 public class RingDisplayItem  {
 
@@ -41,15 +40,30 @@ public class RingDisplayItem  {
 
 
 
+	public function getTouchTarget(): DisplayObject {
+		return view;
+	}
+
+
+	/**
+	 * will be called to remove item from view
+	 */
+	protected function stash(): void {
+		_ringDisplay.removeChild(view);
+	}
+
+	/**
+	 * will be called to add item back to view
+	 */
+	protected function unStash(): void {
+		_ringDisplay.addChild(view);
+	}
+
+
 	internal function addToRingDisplay(ringDisplay: RingDisplay, atIndex: int): void {
 		this._index = atIndex;
 		this._ringDisplay = ringDisplay;
 		_numItems = ringDisplay.numPictures;
-	}
-
-
-	public function getTouchTarget(): DisplayObject {
-		return view;
 	}
 
 
@@ -70,13 +84,13 @@ public class RingDisplayItem  {
 			if( Math.abs(slideRatio) < 1 ) {
 				displayed = true;
 				updateViewTranslation(slideRatio);
-				_ringDisplay.addChild(view);
+				unStash();
 			}
 		}
 		else {
 			if( Math.abs(slideRatio) > 1 ) {
 				displayed = false;
-				_ringDisplay.removeChild(view);
+				stash();
 				return;
 			}
 			else

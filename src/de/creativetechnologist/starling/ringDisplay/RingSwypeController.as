@@ -1,8 +1,8 @@
 /**
  * Created by mak on 10.09.14.
  */
-package de.creativetechnolgist.starling.ringDisplay {
-import de.creativetechnolgist.util.Utils;
+package de.creativetechnologist.starling.ringDisplay {
+import de.creativetechnologist.util.Utils;
 
 import flash.geom.Point;
 
