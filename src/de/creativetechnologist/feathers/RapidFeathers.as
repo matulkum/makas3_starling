@@ -4,7 +4,10 @@
 package de.creativetechnologist.feathers {
 import feathers.controls.Button;
 import feathers.controls.Label;
+import feathers.controls.LayoutGroup;
 import feathers.controls.TextInput;
+import feathers.layout.HorizontalLayout;
+import feathers.layout.VerticalLayout;
 
 import flash.utils.Dictionary;
 
@@ -148,6 +151,33 @@ public class RapidFeathers {
 		return r;
 	}
 
+	// static layouts
+	public static function createHorizontalLayout(gap: int, padding: int = NaN): HorizontalLayout {
+		var layout: HorizontalLayout = new HorizontalLayout();
+		layout.gap = gap;
+		if( padding )
+			layout.padding = padding;
+		return layout;
+	}
+
+	public static function createVerticalLayout(gap: int, padding: int = NaN): VerticalLayout {
+		var layout: VerticalLayout = new VerticalLayout();
+		layout.gap = gap;
+		if( padding )
+			layout.padding = padding;
+		return layout;
+	}
+
+	public static function createHorizontalGroup(gap: int, padding: int = NaN): LayoutGroup {
+		var group: LayoutGroup = new LayoutGroup();
+		group.layout = RapidFeathers.createHorizontalLayout(gap, padding);
+		return group;
+	}
+	public static function createVerticalGroup(gap: int, padding: int = NaN): LayoutGroup {
+		var group: LayoutGroup = new LayoutGroup();
+		group.layout = RapidFeathers.createVerticalLayout(gap, padding);
+		return group;
+	}
 
 }
 }
