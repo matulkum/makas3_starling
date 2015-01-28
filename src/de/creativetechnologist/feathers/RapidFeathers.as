@@ -13,7 +13,7 @@ import starling.events.Event;
 import starling.text.TextField;
 import starling.text.TextFieldAutoSize;
 
-public class Rapid {
+public class RapidFeathers {
 
 	public var targetContainer: DisplayObjectContainer;
 	public var dataModel: *;
@@ -31,39 +31,24 @@ public class Rapid {
 	public static const C_GREEN: uint = 0x00ff00;
 	public static const C_GREEN_LIGHT: uint = 0xcaffca;
 
-	public function Rapid(targetContainer: DisplayObjectContainer) {
+	public function RapidFeathers(targetContainer: DisplayObjectContainer) {
 		this.targetContainer = targetContainer;
 		textFields = new <TextField>[];
 	}
 
 
-	public function createBtn(label: String, triggerHandler: Function = null): Button {
-		return Rapid.createBtn(targetContainer, label, triggerHandler);
-	}
-
-
-	public function createApplyToDataModelButton(label: String): Button {
-		return createBtn(label, onApplyToDataModelButtonTriggered);
-	}
-
-	private function onApplyToDataModelButtonTriggered(e: Event): void {
-		trace("Rapid->onApplyToDataModelButtonTriggered() [51]:: " );
-		if( !dataModel )
-			return;
-		for(var propertyName: String in propertyName_to_textInput) {
-			dataModel[propertyName] = TextInput(propertyName_to_textInput[propertyName]).text;
-		}
-		trace("Rapid->onApplyToDataModelButtonTriggered() [57]:: " );
+	public function createBtn(label: String): Button {
+		return RapidFeathers.createBtn(targetContainer, label, null);
 	}
 
 
 	public function createLabel(text: String = ''): Label {
-		return Rapid.createLabel(targetContainer);
+		return RapidFeathers.createLabel(targetContainer);
 	}
 
 
 	public function createTextField(text: String = '', color: uint = 0, dataModelProperty: String = null): TextField {
-		var textField: TextField = Rapid.createTextField(targetContainer, text, color);
+		var textField: TextField = RapidFeathers.createTextField(targetContainer, text, color);
 		if( dataModelProperty ) {
 			try {
 				textField.text = dataModel[dataModelProperty];
@@ -77,7 +62,7 @@ public class Rapid {
 
 
 	public function createTextInput(text: String, dataModelProperty: String = null): TextInput {
-		var textInput: TextInput = Rapid.createTextInput(targetContainer, text);
+		var textInput: TextInput = RapidFeathers.createTextInput(targetContainer, text);
 		if( dataModelProperty ) {
 			addTextInputToDataModel(textInput, dataModelProperty );
 		}
@@ -85,7 +70,7 @@ public class Rapid {
 	}
 
 	public function createTextInputWithLabel(labelText: String, text: String, dataModelProperty: String = null): TextInputWithLabel {
-		var textInputWithLabel: TextInputWithLabel = Rapid.createTextInputWithLabel(targetContainer, labelText, text);
+		var textInputWithLabel: TextInputWithLabel = RapidFeathers.createTextInputWithLabel(targetContainer, labelText, text);
 		if( dataModelProperty ) {
 			addTextInputToDataModel(textInputWithLabel.textInput, dataModelProperty );
 		}
@@ -106,6 +91,16 @@ public class Rapid {
 	}
 
 
+	public function applyToDataModel(): void {
+		if( !dataModel )
+			return;
+		for(var propertyName: String in propertyName_to_textInput) {
+			dataModel[propertyName] = TextInput(propertyName_to_textInput[propertyName]).text;
+		}
+	}
+
+
+
 
 	// statics
 
@@ -115,7 +110,8 @@ public class Rapid {
 		if( parent ) {
 			parent.addChild(button);
 		}
-		button.addEventListener(Event.TRIGGERED, triggerHandler);
+		if( triggerHandler )
+			button.addEventListener(Event.TRIGGERED, triggerHandler);
 		return button;
 	}
 
