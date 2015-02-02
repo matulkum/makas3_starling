@@ -6,6 +6,9 @@ import feathers.controls.Button;
 import feathers.controls.Label;
 import feathers.controls.LayoutGroup;
 import feathers.controls.TextInput;
+import feathers.controls.ToggleButton;
+import feathers.controls.ToggleSwitch;
+import feathers.core.IToggle;
 import feathers.layout.HorizontalLayout;
 import feathers.layout.VerticalLayout;
 
@@ -23,6 +26,7 @@ public class RapidFeathers {
 
 	private var textFields: Vector.<TextField>;
 	private var propertyName_to_textInput: Dictionary;
+	private var propertyName_to_toggle: Dictionary;
 
 	public static const C_PINK: uint = 0xff00ff;
 	public static const C_RED: uint = 0xff0000;
@@ -46,7 +50,7 @@ public class RapidFeathers {
 
 
 	public function createLabel(text: String = ''): Label {
-		return RapidFeathers.createLabel(targetContainer);
+		return RapidFeathers.createLabel(targetContainer, text);
 	}
 
 
@@ -68,28 +72,58 @@ public class RapidFeathers {
 		var textInput: TextInput = RapidFeathers.createTextInput(targetContainer, text);
 		if( dataModelProperty ) {
 			addTextInputToDataModel(textInput, dataModelProperty );
+			if( dataModel && dataModel[dataModelProperty] )
+				textInput.text = dataModel[dataModelProperty];
 		}
-		return  textInput;
+		return textInput;
 	}
 
 	public function createTextInputWithLabel(labelText: String, text: String, dataModelProperty: String = null): TextInputWithLabel {
 		var textInputWithLabel: TextInputWithLabel = RapidFeathers.createTextInputWithLabel(targetContainer, labelText, text);
 		if( dataModelProperty ) {
 			addTextInputToDataModel(textInputWithLabel.textInput, dataModelProperty );
+			if( dataModel && dataModel[dataModelProperty] )
+				textInputWithLabel.text = dataModel[dataModelProperty];
 		}
 		return  textInputWithLabel;
+	}
+
+
+	public function createToggleSwitch(offText: String, onText: String, isSelected: Boolean = false, dataModelProperty: String = null): ToggleSwitch {
+		var toogle: ToggleSwitch = RapidFeathers.createToggleSwitch( targetContainer, offText, onText, isSelected);
+		addToggleToDataModel(toogle, dataModelProperty);
+		return toogle;
 	}
 
 
 	private function addTextInputToDataModel(input: TextInput, propertyName: String): void {
 		if( !propertyName_to_textInput )
 			propertyName_to_textInput = new Dictionary();
-		try {
-			input.text = dataModel[propertyName];
-			propertyName_to_textInput[propertyName] = input;
+
+		propertyName_to_textInput[propertyName] = input;
+		if( dataModel) {
+			try {
+				input.text = dataModel[propertyName];
+			}
+			catch(e: Error) {
+				trace("Rapid->addTextInputToDataModel() :: WARNING, propertyName "+propertyName+" could not be applied to field"  );
+			}
 		}
-		catch(e: Error) {
-			trace("Rapid->addTextInputToDataModel() :: WARNING, propertyName "+propertyName+" not found on dataModel"  );
+	}
+
+
+	private function addToggleToDataModel(toggle: IToggle, propertyName: String): void {
+		if( !propertyName_to_toggle )
+			propertyName_to_toggle = new Dictionary();
+
+		propertyName_to_toggle[propertyName] = toggle;
+		if( dataModel ) {
+			try {
+				toggle.isSelected = Boolean(dataModel[propertyName]);
+			}
+			catch(e: Error) {
+				trace("Rapid->addTextInputToDataModel() :: WARNING, propertyName "+propertyName+" could not be applied to field"  );
+			}
 		}
 	}
 
@@ -97,8 +131,27 @@ public class RapidFeathers {
 	public function applyToDataModel(): void {
 		if( !dataModel )
 			return;
-		for(var propertyName: String in propertyName_to_textInput) {
+
+		var propertyName: String;
+		for(propertyName in propertyName_to_textInput) {
 			dataModel[propertyName] = TextInput(propertyName_to_textInput[propertyName]).text;
+		}
+		for(propertyName in propertyName_to_toggle) {
+			dataModel[propertyName] = Boolean(IToggle(propertyName_to_toggle[propertyName]).isSelected);
+		}
+	}
+
+
+	public function applyDataModelToUI(): void {
+		if( !dataModel )
+			return;
+
+		var propertyName: String;
+		for(propertyName in propertyName_to_textInput) {
+			TextInput(propertyName_to_textInput[propertyName]).text = dataModel[propertyName];
+		}
+		for(propertyName in propertyName_to_toggle) {
+			IToggle(propertyName_to_toggle[propertyName]).isSelected = Boolean(dataModel[propertyName]);
 		}
 	}
 
@@ -106,6 +159,8 @@ public class RapidFeathers {
 
 
 	// statics
+
+	// text
 
 	public static function createBtn(parent: DisplayObjectContainer, label: String, triggerHandler: Function = null): Button {
 		var button: Button = new Button();
@@ -122,6 +177,7 @@ public class RapidFeathers {
 		var label: Label = new Label();
 		if( text != '')
 			label.text = text;
+		parent.addChild(label);
 		return label;
 	}
 
@@ -149,6 +205,26 @@ public class RapidFeathers {
 			parent.addChild(r);
 
 		return r;
+	}
+
+
+	// Toggles
+
+	public static function createToggleButton(parent: DisplayObjectContainer, isSelected: Boolean = false): ToggleButton {
+		var toggle: ToggleButton = new ToggleButton();
+		parent.addChild(toggle);
+		toggle.isSelected = isSelected;
+		return toggle;
+	}
+
+
+	public static function createToggleSwitch(parent: DisplayObjectContainer, offText: String, onText: String, isSelected: Boolean = false): ToggleSwitch {
+		var toggle: ToggleSwitch = new ToggleSwitch();
+		parent.addChild(toggle);
+		toggle.onText = onText;
+		toggle.offText = offText;
+		toggle.isSelected = isSelected;
+		return toggle;
 	}
 
 	// static layouts
