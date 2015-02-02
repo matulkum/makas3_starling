@@ -11,8 +11,8 @@ import starling.text.TextFieldAutoSize;
 
 public class LogScreenScrollContainer extends ScrollContainer {
 
-	public var fontName: String = 'Verdana';
-	public var fontSize: int = 12;
+	public var fontName: String = 'Arial';
+	public var fontSize: int = 14;
 	public var autoScroll: Boolean = true;
 	public var maxLineCount: int = 50;
 
@@ -20,14 +20,26 @@ public class LogScreenScrollContainer extends ScrollContainer {
 	private var currentColor: uint = 0;
 	private var lineCount: int = 0;
 
+	private var logColors: Vector.<uint>;
+
 
 	public function LogScreenScrollContainer() {
 		super();
 		layout = new VerticalLayout();
+		logColors = new <uint>[
+			0xff0000,
+			0xffff00,
+			0x00ffff,
+			0xffffff
+		];
 	}
 
 
-
+	public function log(msg: String, level: uint = 3): void {
+		if( level >= logColors.length)
+			level = 3;
+		addText(msg, logColors[level]);
+	}
 
 	public function addText(text: String, color: uint = 0): void {
 		var textfield: TextField;
