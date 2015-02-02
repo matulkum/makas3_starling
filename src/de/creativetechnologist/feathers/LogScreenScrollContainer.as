@@ -5,6 +5,8 @@ package de.creativetechnologist.feathers {
 import feathers.controls.ScrollContainer;
 import feathers.layout.VerticalLayout;
 
+import flash.utils.setTimeout;
+
 import starling.text.TextField;
 import starling.text.TextFieldAutoSize;
 
@@ -65,9 +67,11 @@ public class LogScreenScrollContainer extends ScrollContainer {
 			}
 		}
 
-		validate();
+		invalidate();
 		if( autoScroll ) {
-			verticalScrollPosition = maxVerticalScrollPosition;
+			setTimeout(function(){
+				verticalScrollPosition = maxVerticalScrollPosition;
+			}, .001)
 		}
 	}
 
