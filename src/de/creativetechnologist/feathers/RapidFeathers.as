@@ -10,13 +10,19 @@ import feathers.controls.TextInput;
 import feathers.controls.ToggleButton;
 import feathers.controls.ToggleSwitch;
 import feathers.core.IToggle;
+import feathers.events.FeathersEventType;
 import feathers.layout.HorizontalLayout;
 import feathers.layout.VerticalLayout;
 
+import flash.ui.Keyboard;
+
 import flash.utils.Dictionary;
+
+import starling.core.Starling;
 
 import starling.display.DisplayObjectContainer;
 import starling.events.Event;
+import starling.events.KeyboardEvent;
 import starling.text.TextField;
 import starling.text.TextFieldAutoSize;
 
@@ -76,8 +82,10 @@ public class RapidFeathers {
 			if( dataModel && dataModel[dataModelProperty] )
 				textInput.text = dataModel[dataModelProperty];
 		}
+		textInput.addEventListener(FeathersEventType.ENTER, onTextInputEnter);
 		return textInput;
 	}
+
 
 	public function createTextInputWithLabel(labelText: String, text: String, dataModelProperty: String = null): TextInputWithLabel {
 		var textInputWithLabel: TextInputWithLabel = RapidFeathers.createTextInputWithLabel(targetContainer, labelText, text);
@@ -86,8 +94,16 @@ public class RapidFeathers {
 			if( dataModel && dataModel[dataModelProperty] )
 				textInputWithLabel.text = dataModel[dataModelProperty];
 		}
+		textInputWithLabel.textInput.addEventListener(FeathersEventType.ENTER, onTextInputEnter);
 		return  textInputWithLabel;
 	}
+
+
+	private function onTextInputEnter(event: Event): void {
+		trace("RapidFeathers->onTextInputEnter() :: " );
+		TextInput(event.target).clearFocus();
+	}
+
 
 
 	public function createToggleSwitch(offText: String, onText: String, isSelected: Boolean = false, dataModelProperty: String = null): ToggleSwitch {
@@ -207,6 +223,9 @@ public class RapidFeathers {
 
 		return input
 	}
+
+
+
 
 	public static function createTextInputWithLabel(parent: DisplayObjectContainer, labelText: String, text: String): TextInputWithLabel {
 		var r: TextInputWithLabel = new TextInputWithLabel(labelText, text);
