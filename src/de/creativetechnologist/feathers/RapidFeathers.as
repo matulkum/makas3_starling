@@ -3,6 +3,7 @@
  */
 package de.creativetechnologist.feathers {
 import feathers.controls.Button;
+import feathers.controls.Check;
 import feathers.controls.Label;
 import feathers.controls.LayoutGroup;
 import feathers.controls.TextInput;
@@ -91,8 +92,16 @@ public class RapidFeathers {
 
 	public function createToggleSwitch(offText: String, onText: String, isSelected: Boolean = false, dataModelProperty: String = null): ToggleSwitch {
 		var toogle: ToggleSwitch = RapidFeathers.createToggleSwitch( targetContainer, offText, onText, isSelected);
-		addToggleToDataModel(toogle, dataModelProperty);
+		if( dataModelProperty )
+			addToggleToDataModel(toogle, dataModelProperty);
 		return toogle;
+	}
+
+	public function createCheck(label: String, isSelected: Boolean = false, dataModelProperty: String = null): Check {
+		var toggle: Check = RapidFeathers.createCheck( targetContainer, label, isSelected);
+		if( dataModelProperty )
+			addToggleToDataModel(toggle, dataModelProperty);
+		return toggle;
 	}
 
 
@@ -224,6 +233,14 @@ public class RapidFeathers {
 		toggle.onText = onText;
 		toggle.offText = offText;
 		toggle.isSelected = isSelected;
+		return toggle;
+	}
+
+	public static function createCheck(parent: DisplayObjectContainer, label: String, isSelected: Boolean = false): Check {
+		var toggle: Check = new Check();
+		toggle.label = label;
+		toggle.isSelected = isSelected;
+		parent.addChild(toggle);
 		return toggle;
 	}
 
