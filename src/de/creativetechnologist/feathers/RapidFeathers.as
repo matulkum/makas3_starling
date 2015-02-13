@@ -6,23 +6,21 @@ import feathers.controls.Button;
 import feathers.controls.Check;
 import feathers.controls.Label;
 import feathers.controls.LayoutGroup;
+import feathers.controls.Radio;
 import feathers.controls.TextInput;
 import feathers.controls.ToggleButton;
 import feathers.controls.ToggleSwitch;
 import feathers.core.IToggle;
+import feathers.core.ToggleGroup;
 import feathers.events.FeathersEventType;
 import feathers.layout.HorizontalLayout;
+import feathers.layout.TiledRowsLayout;
 import feathers.layout.VerticalLayout;
-
-import flash.ui.Keyboard;
 
 import flash.utils.Dictionary;
 
-import starling.core.Starling;
-
 import starling.display.DisplayObjectContainer;
 import starling.events.Event;
-import starling.events.KeyboardEvent;
 import starling.text.TextField;
 import starling.text.TextFieldAutoSize;
 
@@ -32,8 +30,12 @@ public class RapidFeathers {
 	public var dataModel: *;
 
 	private var textFields: Vector.<TextField>;
+	private var propertyName_to_label: Dictionary;
 	private var propertyName_to_textInput: Dictionary;
 	private var propertyName_to_toggle: Dictionary;
+
+	// radio
+	private var groupName_to_toggleGroup: Dictionary;
 
 	public static const C_PINK: uint = 0xff00ff;
 	public static const C_RED: uint = 0xff0000;
@@ -45,8 +47,9 @@ public class RapidFeathers {
 	public static const C_GREEN: uint = 0x00ff00;
 	public static const C_GREEN_LIGHT: uint = 0xcaffca;
 
-	public function RapidFeathers(targetContainer: DisplayObjectContainer) {
+	public function RapidFeathers(targetContainer: DisplayObjectContainer, dataModel: * = null) {
 		this.targetContainer = targetContainer;
+		this.dataModel = dataModel;
 		textFields = new <TextField>[];
 	}
 
@@ -56,22 +59,23 @@ public class RapidFeathers {
 	}
 
 
-	public function createLabel(text: String = ''): Label {
-		return RapidFeathers.createLabel(targetContainer, text);
-	}
-
-
-	public function createTextField(text: String = '', color: uint = 0, dataModelProperty: String = null): TextField {
-		var textField: TextField = RapidFeathers.createTextField(targetContainer, text, color);
+	// texts
+	public function createLabel(text: String = '', dataModelProperty: String = null): Label {
+		var label: Label = RapidFeathers.createLabel(targetContainer, text);
 		if( dataModelProperty ) {
 			try {
-				textField.text = dataModel[dataModelProperty];
+				if( dataModel && dataModel[dataModelProperty] )
+					label.text = dataModel[dataModelProperty];
 			}
 			catch(e: Error) {
 				trace("Rapid->addTextInputToDataModel() :: WARNING, propertyName "+dataModelProperty+" not found on dataModel"  );
 			}
+
+			if( !propertyName_to_label )
+				propertyName_to_label = new Dictionary();
+			propertyName_to_label[dataModelProperty] = label;
 		}
-		return  textField;
+		return label;
 	}
 
 
@@ -83,6 +87,8 @@ public class RapidFeathers {
 				textInput.text = dataModel[dataModelProperty];
 		}
 		textInput.addEventListener(FeathersEventType.ENTER, onTextInputEnter);
+		textInput.padding = 0;
+		textInput.gap = 0;
 		return textInput;
 	}
 
@@ -99,13 +105,13 @@ public class RapidFeathers {
 	}
 
 
-	private function onTextInputEnter(event: Event): void {
+	protected function onTextInputEnter(event: Event): void {
 		trace("RapidFeathers->onTextInputEnter() :: " );
 		TextInput(event.target).clearFocus();
 	}
 
 
-
+	// toggles
 	public function createToggleSwitch(offText: String, onText: String, isSelected: Boolean = false, dataModelProperty: String = null): ToggleSwitch {
 		var toogle: ToggleSwitch = RapidFeathers.createToggleSwitch( targetContainer, offText, onText, isSelected);
 		if( dataModelProperty )
@@ -121,7 +127,30 @@ public class RapidFeathers {
 	}
 
 
-	private function addTextInputToDataModel(input: TextInput, propertyName: String): void {
+	public function createRadio(label: String, groupName: String, isSelected: Boolean = false, dataModelProperty: String = null): Radio {
+		var radio: Radio = RapidFeathers.createRadio( targetContainer, label, isSelected);
+
+		if( groupName ) {
+			var group: ToggleGroup;
+			if( !groupName_to_toggleGroup )
+				groupName_to_toggleGroup = new Dictionary();
+
+			group = groupName_to_toggleGroup[groupName];
+			if( !group ) {
+				group = new ToggleGroup();
+				groupName_to_toggleGroup[groupName] = group;
+			}
+			radio.toggleGroup = group;
+		}
+		if( dataModelProperty )
+			addToggleToDataModel(radio, dataModelProperty);
+
+		return radio;
+	}
+
+
+	// adding to datamodel
+	protected function addTextInputToDataModel(input: TextInput, propertyName: String): void {
 		if( !propertyName_to_textInput )
 			propertyName_to_textInput = new Dictionary();
 
@@ -137,7 +166,7 @@ public class RapidFeathers {
 	}
 
 
-	private function addToggleToDataModel(toggle: IToggle, propertyName: String): void {
+	protected function addToggleToDataModel(toggle: IToggle, propertyName: String): void {
 		if( !propertyName_to_toggle )
 			propertyName_to_toggle = new Dictionary();
 
@@ -153,6 +182,7 @@ public class RapidFeathers {
 	}
 
 
+	// applying datamodel
 	public function applyToDataModel(): void {
 		if( !dataModel )
 			return;
@@ -172,6 +202,9 @@ public class RapidFeathers {
 			return;
 
 		var propertyName: String;
+		for(propertyName in propertyName_to_label) {
+			Label(propertyName_to_label[propertyName]).text = dataModel[propertyName];
+		}
 		for(propertyName in propertyName_to_textInput) {
 			TextInput(propertyName_to_textInput[propertyName]).text = dataModel[propertyName];
 		}
@@ -263,6 +296,14 @@ public class RapidFeathers {
 		return toggle;
 	}
 
+	public static function createRadio(parent: DisplayObjectContainer, label: String, isSelected: Boolean = false): Radio {
+		var radio: Radio = new Radio();
+		radio.label = label;
+		radio.isSelected = isSelected;
+		parent.addChild(radio);
+		return radio;
+	}
+
 	// static layouts
 	public static function createHorizontalLayout(gap: int, padding: int = NaN): HorizontalLayout {
 		var layout: HorizontalLayout = new HorizontalLayout();
@@ -280,6 +321,15 @@ public class RapidFeathers {
 		return layout;
 	}
 
+	public static function createTiledRowsLayout(gap: int, padding: int = NaN): TiledRowsLayout {
+		var layout: TiledRowsLayout = new TiledRowsLayout();
+		layout.gap = gap;
+		layout.padding = padding;
+		return layout;
+	}
+
+
+	// static layoutGroups
 	public static function createHorizontalGroup(gap: int, padding: int = NaN): LayoutGroup {
 		var group: LayoutGroup = new LayoutGroup();
 		group.layout = RapidFeathers.createHorizontalLayout(gap, padding);
@@ -290,6 +340,13 @@ public class RapidFeathers {
 		group.layout = RapidFeathers.createVerticalLayout(gap, padding);
 		return group;
 	}
+
+	public static function createTiledRowsGroup(gap: int, padding: int = NaN): LayoutGroup {
+		var group: LayoutGroup = new LayoutGroup();
+		group.layout = RapidFeathers.createTiledRowsLayout(gap, padding);
+		return group;
+	}
+
 
 }
 }
