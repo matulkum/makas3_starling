@@ -6,6 +6,7 @@ import feathers.controls.Button;
 import feathers.controls.Check;
 import feathers.controls.Label;
 import feathers.controls.LayoutGroup;
+import feathers.controls.NumericStepper;
 import feathers.controls.Radio;
 import feathers.controls.TextInput;
 import feathers.controls.ToggleButton;
@@ -57,6 +58,7 @@ public class RapidFeathers {
 	public function createBtn(label: String): Button {
 		return RapidFeathers.createBtn(targetContainer, label, null);
 	}
+
 
 
 	// texts
@@ -125,6 +127,8 @@ public class RapidFeathers {
 			addToggleToDataModel(toggle, dataModelProperty);
 		return toggle;
 	}
+
+
 
 
 	public function createRadio(label: String, groupName: String, isSelected: Boolean = false, dataModelProperty: String = null): Radio {
@@ -310,6 +314,18 @@ public class RapidFeathers {
 			parent.addChild(radio);
 		return radio;
 	}
+
+	// ranges
+	public static function createNumericStepper(parent: DisplayObjectContainer, min: Number, max: Number, step: Number): NumericStepper {
+		var stepper: NumericStepper = new NumericStepper();
+		stepper.minimum = min;
+		stepper.maximum = max;
+		stepper.step = step;
+		if( parent )
+			parent.addChild(stepper);
+		return stepper;
+	}
+
 
 	// static layouts
 	public static function createHorizontalLayout(gap: int, padding: int = NaN): HorizontalLayout {

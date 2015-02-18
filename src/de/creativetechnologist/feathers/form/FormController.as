@@ -3,6 +3,7 @@
  */
 package de.creativetechnologist.feathers.form {
 import feathers.controls.Check;
+import feathers.controls.IRange;
 import feathers.controls.Label;
 import feathers.controls.Radio;
 import feathers.controls.TextInput;
@@ -24,6 +25,7 @@ public class FormController {
 	private var propertyName_to_label: Dictionary;
 	private var propertyName_to_textInput: Dictionary;
 	private var propertyName_to_toggle: Dictionary;
+	private var propertyName_to_range: Dictionary;
 
 	// radio
 	private var groupName_to_toggleGroup: Dictionary;
@@ -70,9 +72,8 @@ public class FormController {
 	}
 
 
-//	public function addEMailTextInput(input: TextInput): TextInput {
-//		return input;
-//	}
+
+	// texts
 
 	public function addTextInput(input: TextInput, propertyName: String = null, validators: Vector.<IValidator> = null): TextInput {
 		addTextInputToDataModel(input, propertyName);
@@ -97,6 +98,8 @@ public class FormController {
 			inputs[index+1].setFocus();
 	}
 
+
+	// Toggles
 
 	public function addCheck(toggle: Check, dataModelProperty: String = null): Check {
 		if( dataModelProperty )
@@ -125,9 +128,20 @@ public class FormController {
 	}
 
 
+	// ranges
+
+	public function addRange(range: IRange, propertyName: String = null): IRange {
+		if( propertyName ) {
+			addRangeToDataModel(range, propertyName);
+		}
+		return range;
+	}
+
+
 
 
 	// adding to datamodel
+
 	public function addTextInputToDataModel(input: TextInput, propertyName: String): TextInput {
 		if( !propertyName )
 			return input;
@@ -158,10 +172,27 @@ public class FormController {
 				toggle.isSelected = Boolean(dataModel[propertyName]);
 			}
 			catch(e: Error) {
-				trace("Rapid->addTextInputToDataModel() :: WARNING, propertyName "+propertyName+" could not be applied to field"  );
+				trace("addTextInputToDataModel() :: WARNING, propertyName "+propertyName+" could not be applied to field"  );
 			}
 		}
 		return toggle;
+	}
+
+
+	public function addRangeToDataModel(range: IRange, propertyName: String): IRange {
+		if( !propertyName_to_range )
+			propertyName_to_range = new Dictionary();
+
+		propertyName_to_range[propertyName] = range;
+		if( dataModel ) {
+			try {
+				range.value = Number(dataModel[propertyName]);
+			}
+			catch(e: Error) {
+				trace("addRangeToDataModel() :: WARNING, propertyName "+propertyName+" could not be applied to field"  );
+			}
+		}
+		return range;
 	}
 
 
@@ -228,6 +259,9 @@ public class FormController {
 		}
 		for(propertyName in propertyName_to_toggle) {
 			dataModel[propertyName] = Boolean(IToggle(propertyName_to_toggle[propertyName]).isSelected);
+		}
+		for(propertyName in propertyName_to_range) {
+			dataModel[propertyName] = Number(IRange(propertyName_to_range[propertyName]).value);
 		}
 	}
 
