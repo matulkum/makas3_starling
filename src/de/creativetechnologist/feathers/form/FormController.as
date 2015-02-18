@@ -280,6 +280,9 @@ public class FormController {
 		for(propertyName in propertyName_to_toggle) {
 			IToggle(propertyName_to_toggle[propertyName]).isSelected = Boolean(dataModel[propertyName]);
 		}
+		for(propertyName in propertyName_to_range) {
+			IRange(propertyName_to_range[propertyName]).value = Number(dataModel[propertyName]);
+		}
 	}
 }
 }
