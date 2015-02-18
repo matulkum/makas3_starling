@@ -16,6 +16,7 @@ public class TouchDownGesture {
 
 	protected var isDown: Boolean;
 
+	// (this, EVT_String)
 	private var _signal: Signal;
 	public static var EVT_DOWN: String = 'EVT_DOWN';
 	public static var EVT_UP: String = 'EVT_UP';

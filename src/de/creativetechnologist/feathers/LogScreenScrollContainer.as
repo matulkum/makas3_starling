@@ -85,7 +85,7 @@ public class LogScreenScrollContainer extends ScrollContainer {
 		if( indexOfLinebreak > -1)
 			textFields[0].text = string.substr(indexOfLinebreak + 1);
 		else {
-			removeChild(textFields.shift());
+			removeChild(textFields.shift()).dispose();
 		}
 
 //		trace("LogScreenScrollContainer->shiftLine() [70]:: ", textFields[0].text );

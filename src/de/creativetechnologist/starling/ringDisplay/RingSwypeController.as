@@ -40,14 +40,25 @@ public class RingSwypeController extends EventDispatcher {
 
 	public function setIndex(index: int, tween: Boolean = true): void {
 		currentIndex = index;
-		setCurrentItem(_ringDisplay.items[Utils.normalizeIndexToLength(index, _ringDisplay.items.length)]);
+		var newItem: RingDisplayItem = _ringDisplay.items[Utils.normalizeIndexToLength(index, _ringDisplay.items.length)];
+		var didItemChange: Boolean = currentItem != newItem;
+		setCurrentItem(newItem);
 		if( tween ) {
-			Starling.juggler.tween(_ringDisplay, .5, {index: index, transition: Transitions.EASE_OUT});
+			Starling.juggler.tween(_ringDisplay, .5, {
+				index: index,
+				transition: Transitions.EASE_OUT,
+				onComplete: didItemChange ? onSetIndexTweenComplete : null
+			});
 		}
 		else {
 			_ringDisplay.index = index;
 		}
 		dispatchEventWith(Event.CHANGE);
+	}
+
+
+	private function onSetIndexTweenComplete(): void {
+		currentItem.onShow();
 	}
 
 
@@ -60,8 +71,10 @@ public class RingSwypeController extends EventDispatcher {
 	private function setCurrentItem(item: RingDisplayItem): void {
 		if( item == currentItem )
 			return;
-		if( currentItem )
+		if( currentItem ) {
 			currentItem.getTouchTarget().removeEventListener(TouchEvent.TOUCH, onViewTouched);
+			currentItem.onHide();
+		}
 		currentItem = item;
 		currentItem.getTouchTarget().addEventListener(TouchEvent.TOUCH, onViewTouched);
 	}

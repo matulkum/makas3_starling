@@ -235,7 +235,9 @@ public class RapidFeathers {
 		var label: Label = new Label();
 		if( text != '')
 			label.text = text;
-		parent.addChild(label);
+
+		if( parent )
+			parent.addChild(label);
 		return label;
 	}
 
@@ -243,7 +245,8 @@ public class RapidFeathers {
 		var txt: TextField = new TextField(14,14, text);
 		txt.color = color;
 		txt.autoSize = TextFieldAutoSize.BOTH_DIRECTIONS;
-		parent.addChild(txt);
+		if( parent )
+			parent.addChild(txt);
 		return txt;
 	}
 
@@ -273,18 +276,20 @@ public class RapidFeathers {
 
 	public static function createToggleButton(parent: DisplayObjectContainer, isSelected: Boolean = false): ToggleButton {
 		var toggle: ToggleButton = new ToggleButton();
-		parent.addChild(toggle);
 		toggle.isSelected = isSelected;
+		if( parent )
+			parent.addChild(toggle);
 		return toggle;
 	}
 
 
 	public static function createToggleSwitch(parent: DisplayObjectContainer, offText: String, onText: String, isSelected: Boolean = false): ToggleSwitch {
 		var toggle: ToggleSwitch = new ToggleSwitch();
-		parent.addChild(toggle);
 		toggle.onText = onText;
 		toggle.offText = offText;
 		toggle.isSelected = isSelected;
+		if( parent )
+			parent.addChild(toggle);
 		return toggle;
 	}
 
@@ -292,7 +297,8 @@ public class RapidFeathers {
 		var toggle: Check = new Check();
 		toggle.label = label;
 		toggle.isSelected = isSelected;
-		parent.addChild(toggle);
+		if( parent )
+			parent.addChild(toggle);
 		return toggle;
 	}
 
@@ -300,7 +306,8 @@ public class RapidFeathers {
 		var radio: Radio = new Radio();
 		radio.label = label;
 		radio.isSelected = isSelected;
-		parent.addChild(radio);
+		if( parent )
+			parent.addChild(radio);
 		return radio;
 	}
 

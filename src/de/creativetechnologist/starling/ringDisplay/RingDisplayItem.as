@@ -45,6 +45,14 @@ public class RingDisplayItem  {
 	}
 
 
+	public function onShow(): void {
+	}
+
+
+	public function onHide(): void {
+	}
+
+
 	/**
 	 * will be called to remove item from view
 	 */

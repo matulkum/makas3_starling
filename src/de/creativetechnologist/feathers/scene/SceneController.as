@@ -45,7 +45,7 @@ public class SceneController {
 	}
 
 
-	private function onStarlingStageResize(event: ResizeEvent): void {
+	protected function onStarlingStageResize(event: ResizeEvent): void {
 		_screen.width = starlingStage.stageWidth;
 		_screen.height = starlingStage.stageHeight;
 		_screen.validate();
