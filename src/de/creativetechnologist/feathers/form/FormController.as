@@ -18,7 +18,7 @@ import starling.events.Event;
 
 public class FormController {
 
-	public var dataModel: *;
+	private var _dataModel: *;
 
 	private var inputs: Vector.<TextInput>;
 
@@ -45,7 +45,7 @@ public class FormController {
 
 
 	public function FormController(dataModel: Object = null) {
-		this.dataModel = dataModel;
+		this._dataModel = dataModel;
 		_invalids = new <FeathersControl>[];
 	}
 
@@ -72,8 +72,25 @@ public class FormController {
 	}
 
 
+	public function get dataModel(): * {return _dataModel;}
+
+	public function set dataModel(value: *): void {
+		if( value == _dataModel )
+			return;
+
+		_dataModel = value;
+		applyDataModelToUI();
+	}
+
+
 
 	// texts
+
+
+	public function addLabel(label: Label, propertyName: String): void {
+		addLabelToDataModel(label, propertyName);
+	}
+
 
 	public function addTextInput(input: TextInput, propertyName: String = null, validators: Vector.<IValidator> = null): TextInput {
 		addTextInputToDataModel(input, propertyName);
@@ -142,6 +159,25 @@ public class FormController {
 
 	// adding to datamodel
 
+	public function addLabelToDataModel(label: Label, propertyName: String): Label {
+		if( !propertyName )
+			return label;
+
+		if( !propertyName_to_label )
+			propertyName_to_label = new Dictionary();
+
+		propertyName_to_label[propertyName] = label;
+		if( _dataModel) {
+			try {
+				label.text = _dataModel[propertyName];
+			}
+			catch(e: Error) {
+				trace("WARNING, propertyName "+propertyName+" could not be applied to field"  );
+			}
+		}
+		return label;
+	}
+
 	public function addTextInputToDataModel(input: TextInput, propertyName: String): TextInput {
 		if( !propertyName )
 			return input;
@@ -150,9 +186,9 @@ public class FormController {
 			propertyName_to_textInput = new Dictionary();
 
 		propertyName_to_textInput[propertyName] = input;
-		if( dataModel) {
+		if( _dataModel) {
 			try {
-				input.text = dataModel[propertyName];
+				input.text = _dataModel[propertyName];
 			}
 			catch(e: Error) {
 				trace("WARNING, propertyName "+propertyName+" could not be applied to field"  );
@@ -167,9 +203,9 @@ public class FormController {
 			propertyName_to_toggle = new Dictionary();
 
 		propertyName_to_toggle[propertyName] = toggle;
-		if( dataModel ) {
+		if( _dataModel ) {
 			try {
-				toggle.isSelected = Boolean(dataModel[propertyName]);
+				toggle.isSelected = Boolean(_dataModel[propertyName]);
 			}
 			catch(e: Error) {
 				trace("addTextInputToDataModel() :: WARNING, propertyName "+propertyName+" could not be applied to field"  );
@@ -184,9 +220,9 @@ public class FormController {
 			propertyName_to_range = new Dictionary();
 
 		propertyName_to_range[propertyName] = range;
-		if( dataModel ) {
+		if( _dataModel ) {
 			try {
-				range.value = Number(dataModel[propertyName]);
+				range.value = Number(_dataModel[propertyName]);
 			}
 			catch(e: Error) {
 				trace("addRangeToDataModel() :: WARNING, propertyName "+propertyName+" could not be applied to field"  );
@@ -250,39 +286,40 @@ public class FormController {
 
 	// applying datamodel
 	public function applyToDataModel(): void {
-		if( !dataModel )
+		if( !_dataModel )
 			return;
 
 		var propertyName: String;
 		for(propertyName in propertyName_to_textInput) {
-			dataModel[propertyName] = TextInput(propertyName_to_textInput[propertyName]).text;
+			_dataModel[propertyName] = TextInput(propertyName_to_textInput[propertyName]).text;
 		}
 		for(propertyName in propertyName_to_toggle) {
-			dataModel[propertyName] = Boolean(IToggle(propertyName_to_toggle[propertyName]).isSelected);
+			_dataModel[propertyName] = Boolean(IToggle(propertyName_to_toggle[propertyName]).isSelected);
 		}
 		for(propertyName in propertyName_to_range) {
-			dataModel[propertyName] = Number(IRange(propertyName_to_range[propertyName]).value);
+			_dataModel[propertyName] = Number(IRange(propertyName_to_range[propertyName]).value);
 		}
 	}
 
 
 	public function applyDataModelToUI(): void {
-		if( !dataModel )
+		if( !_dataModel )
 			return;
 
 		var propertyName: String;
 		for(propertyName in propertyName_to_label) {
-			Label(propertyName_to_label[propertyName]).text = dataModel[propertyName];
+			Label(propertyName_to_label[propertyName]).text = _dataModel[propertyName];
 		}
 		for(propertyName in propertyName_to_textInput) {
-			TextInput(propertyName_to_textInput[propertyName]).text = dataModel[propertyName];
+			TextInput(propertyName_to_textInput[propertyName]).text = _dataModel[propertyName];
 		}
 		for(propertyName in propertyName_to_toggle) {
-			IToggle(propertyName_to_toggle[propertyName]).isSelected = Boolean(dataModel[propertyName]);
+			IToggle(propertyName_to_toggle[propertyName]).isSelected = Boolean(_dataModel[propertyName]);
 		}
 		for(propertyName in propertyName_to_range) {
-			IRange(propertyName_to_range[propertyName]).value = Number(dataModel[propertyName]);
+			IRange(propertyName_to_range[propertyName]).value = Number(_dataModel[propertyName]);
 		}
 	}
+
 }
 }

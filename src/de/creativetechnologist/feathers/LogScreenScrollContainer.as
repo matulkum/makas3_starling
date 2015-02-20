@@ -7,6 +7,8 @@ import feathers.layout.VerticalLayout;
 
 import flash.utils.setTimeout;
 
+import starling.display.Quad;
+
 import starling.text.TextField;
 import starling.text.TextFieldAutoSize;
 
@@ -25,8 +27,10 @@ public class LogScreenScrollContainer extends ScrollContainer {
 	private var logColors: Vector.<uint>;
 
 
-	public function LogScreenScrollContainer() {
+	public function LogScreenScrollContainer(backgroundColor: uint = 0) {
 		super();
+		backgroundSkin = new Quad(8,8, backgroundColor);
+		Quad(backgroundSkin).alpha = .75;
 		layout = new VerticalLayout();
 		logColors = new <uint>[
 			0xff0000,
@@ -34,6 +38,7 @@ public class LogScreenScrollContainer extends ScrollContainer {
 			0x00ffff,
 			0xffffff
 		];
+		verticalScrollPolicy = SCROLL_POLICY_ON;
 	}
 
 
@@ -43,7 +48,7 @@ public class LogScreenScrollContainer extends ScrollContainer {
 		addText(msg, logColors[level]);
 	}
 
-	public function addText(text: String, color: uint = 0): void {
+	public function addText(text: String, color: uint = 0xffffff): void {
 		var textfield: TextField;
 		if( textFields.length == 0 || color != currentColor ) {
 			textfield = new TextField(1,1, text, fontName, fontSize, color);

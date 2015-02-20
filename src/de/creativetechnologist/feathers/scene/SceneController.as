@@ -41,8 +41,12 @@ public class SceneController {
 
 
 	public function onShow(): void {
-		trace("SceneController->onShow() :: " );
 	}
+
+	public function onAboutToHide(): void {
+	}
+
+
 
 
 	protected function onStarlingStageResize(event: ResizeEvent): void {
