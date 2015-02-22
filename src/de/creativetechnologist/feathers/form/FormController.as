@@ -28,7 +28,7 @@ public class FormController {
 	private var propertyName_to_range: Dictionary;
 
 	// radio
-	private var groupName_to_toggleGroup: Dictionary;
+	public var groupName_to_toggleGroup: Dictionary;
 
 	// validators
 	private var control_to_validators: Dictionary;
