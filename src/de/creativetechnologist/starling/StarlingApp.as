@@ -10,11 +10,10 @@ import flash.geom.Rectangle;
 
 import starling.core.Starling;
 import starling.display.DisplayObject;
-import starling.display.Sprite;
 import starling.events.Event;
 import starling.events.ResizeEvent;
 
-public class StarlingApp extends flash.display.Sprite {
+public class StarlingApp extends Sprite {
 
 	public static var flashStage: Stage;
 
@@ -27,7 +26,7 @@ public class StarlingApp extends flash.display.Sprite {
 	public function StarlingApp(starlingRootClass: Class) {
 		super();
 		this.starlingRootClass = starlingRootClass;
-		loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onGlobalErrors);
+		loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onUnhandledErrors);
 
 		setupFlashStage();
 		setupStarling( starlingRootClass, createStarlingViewport());
@@ -71,7 +70,7 @@ public class StarlingApp extends flash.display.Sprite {
 		starling.stage.stageHeight = starling.viewPort.height;
 	}
 
-	protected function onGlobalErrors(event: UncaughtErrorEvent): void {
+	protected function onUnhandledErrors(event: UncaughtErrorEvent): void {
 
 	}
 }
