@@ -44,8 +44,9 @@ public class Console extends Sprite {
 	private var meassureTextfield: TextField;
 
 
-	public function Console(starling: Starling) {
+	public function Console(starling: Starling, fontScale: Number = 1) {
 		this.starling = starling;
+		fontSize *= fontScale;
 
 		background = new Quad(8,8, 0);
 		Quad(background).alpha = .75;
@@ -64,6 +65,7 @@ public class Console extends Sprite {
 		addChild(scrollContainer);
 
 		setupSize();
+
 		starling.stage.addEventListener(ResizeEvent.RESIZE, onStageResize);
 	}
 
@@ -75,9 +77,10 @@ public class Console extends Sprite {
 	}
 
 
-	public function attachLogger(logger: Logger): void {
+	public function attachLogger(logger: Logger): Console {
 		this.logger = logger;
 		logger.signal.add(onLogger);
+		return this;
 	}
 
 
@@ -100,7 +103,7 @@ public class Console extends Sprite {
 
 		if( logger && logger.stack ) {
 			length = logger.stack.length;
-			for (i = 0; i < length; i++) {
+			for (i = Math.max(0, length - maxLineCount); i < length; i++) {
 				addText(logger.stack[i].message, logColors[logger.stack[i].level]);
 			}
 		}
@@ -146,15 +149,17 @@ public class Console extends Sprite {
 			meassureTextfield.autoSize = TextFieldAutoSize.VERTICAL;
 			meassureTextfield.hAlign = HAlign.LEFT;
 		}
-		else
-			 meassureTextfield.text = text;
+		else {
+			meassureTextfield.color = color;
+			meassureTextfield.text = text;
+		}
 
 		var measuredTextHeight: int = 0;
 		try {
 			measuredTextHeight = meassureTextfield.height;
 		}
 		catch(e:*) {}
-		trace(measuredTextHeight);
+
 		if( measuredTextHeight == 0 ||  measuredTextHeight > maxTextHeight ) {
 			meassureTextfield.text = 'MESSAGE IGNORED BECAUSE MAX LINE COUNT WAS EXCEEDED!';
 			measuredTextHeight =  meassureTextfield.height;
@@ -188,7 +193,7 @@ public class Console extends Sprite {
 			}
 		}
 
-		scrollContainer.invalidate();
+		scrollContainer.validate();
 		if( autoScroll ) {
 			setTimeout(function(){
 				scrollContainer.verticalScrollPosition = scrollContainer.maxVerticalScrollPosition;
@@ -207,7 +212,7 @@ public class Console extends Sprite {
 		if( indexOfLinebreak > -1)
 			textFields[0].text = string.substr(indexOfLinebreak + 1);
 		else {
-			removeChild(textFields.shift()).dispose();
+			textFields.shift().removeFromParent(true);
 		}
 	}
 
