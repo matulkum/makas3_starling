@@ -108,6 +108,7 @@ public class Console extends Sprite {
 			}
 		}
 		starling.stage.addChild(this);
+		starling.showStats = true;
 	}
 
 
@@ -118,6 +119,7 @@ public class Console extends Sprite {
 
 		removeFromParent();
 		clear();
+		starling.showStats = false;
 	}
 
 
