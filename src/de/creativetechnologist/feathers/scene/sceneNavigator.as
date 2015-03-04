@@ -15,6 +15,7 @@ public class SceneNavigator extends Sprite {
 
 
 	private var _screenNavigator: ScreenNavigator;
+
 	public function get screenNavigator(): ScreenNavigator {return _screenNavigator;}
 
 	protected var sceneControllers: Vector.<SceneController>;
@@ -35,7 +36,7 @@ public class SceneNavigator extends Sprite {
 
 
 	private function onScreenNavigatorTransitionComplete(event: Event): void {
-		var sceneController: SceneController = screen_to_sceneController[_screenNavigator.activeScreen] as SceneController	;
+		var sceneController: SceneController = screen_to_sceneController[_screenNavigator.activeScreen] as SceneController;
 		if(sceneController)
 			sceneController.onShow();
 	}
@@ -64,7 +65,12 @@ public class SceneNavigator extends Sprite {
 //			throw new Error('scene id not found!');
 //			return null;
 //		}
-		_screenNavigator.showScreen(id);
+		if( id != _screenNavigator.activeScreenID) {
+			var current: SceneController = screen_to_sceneController[_screenNavigator.activeScreen] as SceneController;
+			if( current )
+				current.onAboutToHide();
+			_screenNavigator.showScreen(id);
+		}
 	}
 
 }
