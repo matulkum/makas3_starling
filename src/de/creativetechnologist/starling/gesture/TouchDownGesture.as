@@ -11,7 +11,7 @@ import starling.events.TouchPhase;
 
 public class TouchDownGesture {
 
-	protected var _target: DisplayObject;
+	private var _target: DisplayObject;
 	protected var _currentTouchDowns: Vector.<Touch>;
 
 	protected var isDown: Boolean;
@@ -32,6 +32,14 @@ public class TouchDownGesture {
 		_signal = new Signal(TouchDownGesture, String);
 		_target.addEventListener(TouchEvent.TOUCH, onTargetTouched);
 	}
+
+
+    public function set enabled(value: Boolean): void {
+        if( value )
+            _target.addEventListener(TouchEvent.TOUCH, onTargetTouched);
+        else
+            _target.removeEventListener(TouchEvent.TOUCH, onTargetTouched);
+    }
 
 
 	private function onTargetTouched(event: TouchEvent): void {
@@ -76,5 +84,9 @@ public class TouchDownGesture {
 		}
 
 	}
+
+    public function get target():DisplayObject {
+        return _target;
+    }
 }
 }
