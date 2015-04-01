@@ -30,13 +30,14 @@ public class SceneController {
 	}
 
 
-	public function setFullscreen(starlingStage: Stage, autoOrient: Boolean = true): void {
+	public function setFullscreen(starlingStage: Stage, autoOrient: Boolean = true): SceneController {
 		this.starlingStage = starlingStage;
 		onStarlingStageResize(null);
 
 		if( autoOrient ) {
 			starlingStage.addEventListener(ResizeEvent.RESIZE, onStarlingStageResize);
 		}
+		return this;
 	}
 
 

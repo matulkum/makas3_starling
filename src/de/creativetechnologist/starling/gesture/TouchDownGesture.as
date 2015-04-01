@@ -72,14 +72,12 @@ public class TouchDownGesture {
 			if( isTouching ) {
 				isDown = true;
 				_signal.dispatch(this, EVT_DOWN);
-				trace(EVT_DOWN);
 			}
 		}
 		else {
 			if( !isTouching ) {
 				isDown = false;
 				_signal.dispatch(this, EVT_UP);
-				trace(EVT_UP);
 			}
 		}
 

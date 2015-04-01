@@ -278,8 +278,9 @@ public class RapidFeathers {
 
 	// Toggles
 
-	public static function createToggleButton(parent: DisplayObjectContainer, isSelected: Boolean = false): ToggleButton {
+	public static function createToggleButton(parent: DisplayObjectContainer, label: String, isSelected: Boolean = false): ToggleButton {
 		var toggle: ToggleButton = new ToggleButton();
+		toggle.label = label;
 		toggle.isSelected = isSelected;
 		if( parent )
 			parent.addChild(toggle);

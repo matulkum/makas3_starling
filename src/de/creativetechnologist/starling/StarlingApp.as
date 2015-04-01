@@ -15,6 +15,7 @@ import starling.events.ResizeEvent;
 
 public class StarlingApp extends Sprite {
 
+    public static var PROFILE: String;
 	public static var flashStage: Stage;
 
 	protected var starlingRootClass: Class;
@@ -25,8 +26,11 @@ public class StarlingApp extends Sprite {
 
 	public function StarlingApp(starlingRootClass: Class) {
 		super();
+        if( !PROFILE )
+            PROFILE = Context3DProfile.STANDARD;
+
 		this.starlingRootClass = starlingRootClass;
-		loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onUnhandledErrors);
+//		loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onUnhandledErrors);
 
 		setupFlashStage();
 		setupStarling( starlingRootClass, createStarlingViewport());
@@ -46,7 +50,7 @@ public class StarlingApp extends Sprite {
 
 
 	protected function setupStarling( rootClass: Class, viewPort: Rectangle): void {
-		starling = new Starling(rootClass, stage, viewPort, null, 'auto', Context3DProfile.BASELINE_EXTENDED);
+		starling = new Starling(rootClass, stage, viewPort, null, 'auto', PROFILE);
 //		starling.stage.stageWidth = 768;
 //		starling.stage.stageHeight = 1024;
 		starling.addEventListener(Event.ROOT_CREATED, onRootCreated);
