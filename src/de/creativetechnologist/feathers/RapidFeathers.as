@@ -235,11 +235,13 @@ public class RapidFeathers {
 		return button;
 	}
 
-	public static function createLabel(parent: DisplayObjectContainer, text: String = ''): Label {
+	public static function createLabel(parent: DisplayObjectContainer, text: String = '', styleName: String = null): Label {
 		var label: Label = new Label();
 		if( text != '')
 			label.text = text;
 
+		if( styleName )
+			label.styleNameList.add(styleName);
 		if( parent )
 			parent.addChild(label);
 		return label;
@@ -365,9 +367,11 @@ public class RapidFeathers {
 		return group;
 	}
 
-	public static function createTiledRowsGroup(gap: int, padding: int = NaN): LayoutGroup {
+	public static function createTiledRowsGroup(gap: int, padding: int = NaN, colCount: int = NaN): LayoutGroup {
 		var group: LayoutGroup = new LayoutGroup();
-		group.layout = RapidFeathers.createTiledRowsLayout(gap, padding);
+		var layout: TiledRowsLayout = RapidFeathers.createTiledRowsLayout(gap, padding);
+		layout.requestedColumnCount = colCount;
+		group.layout = layout;
 		return group;
 	}
 

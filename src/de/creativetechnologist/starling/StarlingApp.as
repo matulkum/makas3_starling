@@ -27,7 +27,7 @@ public class StarlingApp extends Sprite {
 	public function StarlingApp(starlingRootClass: Class) {
 		super();
         if( !PROFILE )
-            PROFILE = Context3DProfile.STANDARD;
+            PROFILE = Context3DProfile.BASELINE_EXTENDED;
 
 		this.starlingRootClass = starlingRootClass;
 //		loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onUnhandledErrors);
