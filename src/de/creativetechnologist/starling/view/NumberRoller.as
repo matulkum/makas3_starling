@@ -9,22 +9,29 @@ import feathers.controls.text.TextBlockTextRenderer;
 import flash.text.engine.ElementFormat;
 import flash.utils.setInterval;
 
+import starling.display.DisplayObjectContainer;
+
 import starling.display.Sprite;
 import starling.filters.BlurFilter;
 
 public class NumberRoller extends Sprite {
 
-	private var numberRollers: Vector.<SingleNumberRoller>;
-	private var decimalCount: int;
+	protected var numberRollers: Vector.<SingleNumberRoller>;
+	protected var decimalCount: int;
+
+	protected var numberRollerContainer: DisplayObjectContainer;
 
 	public function NumberRoller(elementFormat: ElementFormat, decimalCount: int = 3) {
 		super();
 		this.decimalCount = decimalCount;
 
+		if( !numberRollerContainer )
+			numberRollerContainer = this;
+
 		numberRollers = new <SingleNumberRoller>[];
 		var numberRoller: SingleNumberRoller;
 		for(var i:int = 0; i < decimalCount; i++) {
-			numberRoller  = new SingleNumberRoller(this, elementFormat, 0
+			numberRoller  = new SingleNumberRoller(numberRollerContainer, elementFormat, 0
 			);
 			numberRoller.rowSprite.x = (numberRoller.rowSprite.width + 2) * i;
 			numberRollers.push(numberRoller);

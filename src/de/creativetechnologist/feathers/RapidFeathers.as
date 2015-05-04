@@ -224,7 +224,7 @@ public class RapidFeathers {
 
 	// text
 
-	public static function createBtn(parent: DisplayObjectContainer, label: String, triggerHandler: Function = null): Button {
+	public static function createBtn(parent: DisplayObjectContainer, label: String, triggerHandler: Function = null, styleName: String = null): Button {
 		var button: Button = new Button();
 		button.label = label;
 		if( parent ) {
@@ -232,6 +232,9 @@ public class RapidFeathers {
 		}
 		if( triggerHandler )
 			button.addEventListener(Event.TRIGGERED, triggerHandler);
+
+		if( styleName )
+			button.styleNameList.add(styleName);
 		return button;
 	}
 
