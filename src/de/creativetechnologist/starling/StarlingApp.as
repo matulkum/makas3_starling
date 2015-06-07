@@ -4,6 +4,8 @@
 package de.creativetechnologist.starling {
 import flash.display.Sprite;
 import flash.display.Stage;
+import flash.display.StageAlign;
+import flash.display.StageScaleMode;
 import flash.display3D.Context3DProfile;
 import flash.events.UncaughtErrorEvent;
 import flash.geom.Rectangle;
@@ -42,10 +44,12 @@ public class StarlingApp extends Sprite {
 		flashStage = stage;
 		stage.frameRate = 60;
 		stage.color = 0;
+		stage.align = StageAlign.TOP_LEFT;
+		stage.scaleMode = StageScaleMode.NO_SCALE;
 	}
 
 	protected function createStarlingViewport(): Rectangle {
-		return new Rectangle(0, 0, stage.fullScreenWidth, stage.fullScreenHeight);
+		return new Rectangle(0, 0, flashStage.stageWidth, flashStage.stageHeight);
 	}
 
 
@@ -74,8 +78,7 @@ public class StarlingApp extends Sprite {
 		starling.stage.stageHeight = starling.viewPort.height;
 	}
 
-	protected function onUnhandledErrors(event: UncaughtErrorEvent): void {
-
-	}
+//	protected function onUnhandledErrors(event: UncaughtErrorEvent): void {
+//	}
 }
 }

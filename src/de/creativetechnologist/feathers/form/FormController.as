@@ -2,6 +2,8 @@
  * Created by mak on 18.02.15.
  */
 package de.creativetechnologist.feathers.form {
+import de.creativetechnologist.form.IValidator;
+
 import feathers.controls.Check;
 import feathers.controls.IRange;
 import feathers.controls.Label;
